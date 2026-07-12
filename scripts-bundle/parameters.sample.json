@@ -1,0 +1,15 @@
+{
+  "source": {
+    "tenantId": "<TenantB-ID>",
+    "subscriptionId": "<SubscriptionB-ID>",
+    "resourceGroup": "<RG-B>",
+    "workspaceName": "<Workspace-B>"
+  },
+  "destination": {
+    "tenantId": "<TenantA-ID>",
+    "subscriptionId": "<SubscriptionA-ID>",
+    "resourceGroup": "<RG-A>",
+    "workspaceName": "<Workspace-A>"
+  },
+  "_note": "Placeholders only. Never commit real IDs or secrets. Use PIM + MFA."
+}
