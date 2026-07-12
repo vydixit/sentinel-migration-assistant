@@ -47,6 +47,13 @@ npm install
 npm run dev       # http://localhost:3000
 ```
 
+### Run in GitHub Codespaces (on demand)
+This repo ships a dev container (`.devcontainer/devcontainer.json`).
+1. On the GitHub repo page click **Code ▸ Codespaces ▸ Create codespace on main**.
+2. The container runs `npm install`, then auto-starts `npm run dev`.
+3. When port **3000** is forwarded, the app preview opens automatically (or open the
+   forwarded URL from the **Ports** tab). Stop the codespace when done — it only runs on demand.
+
 Build & run production:
 ```bash
 npm run build
