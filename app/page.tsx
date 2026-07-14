@@ -3,7 +3,8 @@
 import Link from "next/link";
 import {
   Shield, Users, CheckCircle2, XCircle, ArrowRight, ListChecks, Terminal,
-  ClipboardCheck, ShieldCheck, Rocket,
+  ClipboardCheck, ShieldCheck, Rocket, Building2, Scissors, Layers, Globe,
+  Handshake, AlertTriangle, Clock, PlugZap, KeyRound, FileSearch, HelpCircle,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,83 @@ const CANNOT_MIGRATE = [
   "Managed identities",
   "Workspace GUIDs / resource IDs",
   "UEBA baseline learning",
+];
+
+// Business drivers for a tenant-to-tenant Sentinel migration
+const DRIVERS = [
+  {
+    icon: Handshake,
+    title: "Mergers & Acquisitions",
+    text: "When two companies combine, security monitoring must be unified into one tenant for a consistent posture and a single pane of glass for the SOC.",
+  },
+  {
+    icon: Scissors,
+    title: "Divestiture / Carve-out",
+    text: "A divested business unit needs its own independent Sentinel environment in a new tenant, with the right detections carried over so it isn't left blind on day one.",
+  },
+  {
+    icon: Layers,
+    title: "Tenant Consolidation",
+    text: "After multiple M&A rounds, organizations consolidate many Entra ID tenants into fewer to cut cost and simplify management — merging SOC content along the way.",
+  },
+  {
+    icon: Globe,
+    title: "Data Sovereignty & Compliance",
+    text: "Regulatory or residency requirements can force security data into a specific tenant, region, or sovereign cloud, triggering a controlled migration.",
+  },
+  {
+    icon: Building2,
+    title: "MSSP / Managed SOC onboarding",
+    text: "Standing up or moving a customer under a managed SOC (often via Azure Lighthouse) means replicating a proven detection stack into the target tenant.",
+  },
+  {
+    icon: KeyRound,
+    title: "Re-platforming & clean-up",
+    text: "Moving off a legacy or over-privileged tenant is an opportunity to rebuild with least-privilege RBAC and Zero Trust from the ground up.",
+  },
+];
+
+// Why it is genuinely hard
+const CHALLENGES = [
+  {
+    icon: XCircle,
+    title: "No native migration tool",
+    text: "Microsoft provides no one-click Sentinel tenant-to-tenant migration. It is not a lift-and-shift — content is exported, transformed, and re-deployed piece by piece.",
+  },
+  {
+    icon: AlertTriangle,
+    title: "Detection & visibility gaps",
+    text: "Done ad-hoc, cutover creates windows where nothing is watching — or a flood of duplicate alerts — exactly when attackers exploit the change.",
+  },
+  {
+    icon: PlugZap,
+    title: "Connectors & identities don't move",
+    text: "Connector tokens, app registrations, and managed identities are tenant-bound and must be re-created and re-authorized, risking ingestion outages.",
+  },
+  {
+    icon: FileSearch,
+    title: "Broken dependencies",
+    text: "Rules reference watchlists, parsers, functions, and workspace IDs. Migrate them in the wrong order and detections silently fail to load.",
+  },
+  {
+    icon: KeyRound,
+    title: "RBAC & least-privilege drift",
+    text: "Role assignments are tenant-specific. Rushed migrations grant Global Admin 'just to get it done' — expanding blast radius and breaking Zero Trust.",
+  },
+  {
+    icon: Clock,
+    title: "No audit trail or repeatability",
+    text: "Manual, undocumented moves leave nothing for auditors and can't be reliably repeated for the next acquisition.",
+  },
+];
+
+// How SMA answers each pain point
+const HELPS = [
+  "Guided, click-by-click steps and CLI/Bicep tracks so nothing is missed or done out of order",
+  "Zero Trust enforced at every step — MFA, PIM, least privilege; Global Admin never required",
+  "Dependency-aware ordering (parsers → watchlists → rules) to prevent broken detections",
+  "Live progress tracking, blockers, and per-phase status for a controlled, dual-run cutover",
+  "Exportable executive, technical, and security/audit reports for evidence and repeatability",
 ];
 
 const ARCH = `flowchart LR
@@ -93,6 +171,80 @@ export default function ReadmePage() {
           </p>
         </div>
       </div>
+
+      {/* Why this tool is needed */}
+      <section className="space-y-5">
+        <div className="flex items-center gap-3">
+          <HelpCircle className="h-6 w-6 text-primary" />
+          <h2 className="text-xl font-bold tracking-tight">Why this tool is needed</h2>
+        </div>
+        <p className="max-w-3xl text-sm text-muted-foreground">
+          Microsoft Sentinel is tightly bound to its Entra ID tenant and Log Analytics workspace, and
+          Microsoft offers <b className="text-foreground">no native tenant-to-tenant migration</b>. Yet
+          business change constantly forces the move. Done by hand under time pressure, these migrations
+          leak detection coverage, break dependencies, and quietly erode Zero Trust. SMA turns an
+          error-prone, undocumented scramble into a guided, auditable, repeatable process.
+        </p>
+
+        {/* Drivers */}
+        <div>
+          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Why organizations migrate Sentinel between tenants
+          </h3>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {DRIVERS.map((d) => {
+              const Icon = d.icon;
+              return (
+                <Card key={d.title}>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <Icon className="h-5 w-5 text-primary" /> {d.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-sm text-muted-foreground">{d.text}</CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Challenges */}
+        <div>
+          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+            Why it's hard to do safely
+          </h3>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {CHALLENGES.map((c) => {
+              const Icon = c.icon;
+              return (
+                <Card key={c.title} className="border-[hsl(var(--danger))]/25">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <Icon className="h-5 w-5 text-[hsl(var(--danger))]" /> {c.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-sm text-muted-foreground">{c.text}</CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* How SMA helps */}
+        <div className="rounded-lg border border-[hsl(var(--success))]/40 bg-[hsl(var(--success))]/5 p-5">
+          <div className="mb-3 flex items-center gap-2 font-semibold text-[hsl(var(--success))]">
+            <ShieldCheck className="h-5 w-5" /> How the Sentinel Migration Assistant helps
+          </div>
+          <ul className="grid gap-2 sm:grid-cols-2">
+            {HELPS.map((h) => (
+              <li key={h} className="flex gap-2 text-sm">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[hsl(var(--success))]" />
+                {h}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
       {/* Who is it for */}
       <Card>
